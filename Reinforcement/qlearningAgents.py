@@ -55,7 +55,7 @@ class QLearningAgent(ReinforcementAgent):
         if not self.Q.has_key((state,action)):
             self.Q[(state,action)] = 0.0
         return self.Q[(state,action)]
-        util.raiseNotDefined()
+        #util.raiseNotDefined()
 
 
     def computeValueFromQValues(self, state):
@@ -69,13 +69,13 @@ class QLearningAgent(ReinforcementAgent):
         legalActions = self.getLegalActions(state)
         if len(legalActions) == 0:
             return 0.0
-        max_Q = None
+        max_Q = self.getQValue(state,legalActions[0])
         for action in legalActions:
             Q_val = self.getQValue(state,action)
             if Q_val > max_Q:
                 max_Q = Q_val
         return max_Q
-        util.raiseNotDefined()
+        #util.raiseNotDefined()
 
     def computeActionFromQValues(self, state):
         """
@@ -89,17 +89,13 @@ class QLearningAgent(ReinforcementAgent):
             return None
 
         possible_actions = []
-        max_Q = None
+        max_Q = self.computeValueFromQValues(state)
         for action in legalActions:
             Q_val = self.getQValue(state,action)
-            if Q_val > max_Q:
-                max_Q = Q_val
-                possible_actions = []
-                possible_actions.append(action)
-            elif Q_val == max_Q:
+            if Q_val == max_Q:
                 possible_actions.append(action)
         return random.choice(possible_actions)
-        util.raiseNotDefined()
+        #util.raiseNotDefined()
 
     def getAction(self, state):
         """
