@@ -1,3 +1,9 @@
+"""
+Modified by Christopher Moroz
+CMPS 3140-01
+Search in Pacman - Q5,Q6
+"""
+
 # searchAgents.py
 # ---------------
 # Licensing Information:  You are free to use or extend these projects for
@@ -288,13 +294,20 @@ class CornersProblem(search.SearchProblem):
         # Please add any code here which you would like to use
         # in initializing the problem
         "*** YOUR CODE HERE ***"
+        # The state will consist of the position of Pacman, and a tuple of 4 Booleans
+        # whose values correspond to the corners in self.corners
+        # If Pacman has already seen it, it will be True; otherwise False
         self.found_corners = (False, False, False, False)
+        # Check if Pacman starts in a corner already
         if self.startingPosition in self.corners:
+            # Unfortunately, since lists and dictionaries cannot be hashed, I have
+            # to use a tuple to store the boolean values. So when I want to flip
+            # one of the values, I have to convert it to a list, swap it, and convert
+            # it back. This is what I am doing below.
             index = self.corners.index(self.startingPosition)
             lst = list(self.found_corners)
             lst[index] = True
             self.found_corners = tuple(lst)
-            #self.found_corners[index] = True
         self.startState = (self.startingPosition,self.found_corners)
 
     def getStartState(self):
@@ -313,7 +326,8 @@ class CornersProblem(search.SearchProblem):
         "*** YOUR CODE HERE ***"
         if state[0] not in self.corners:
             return False
-        #state is in self.corners
+        # If the position is a corner, then make sure everything in self.found_corners
+        # is True. For reference, self.found_corners == state[1]
         for key in self.corners:
             if key != state[0]:
                 index = self.corners.index(key)
@@ -343,22 +357,23 @@ class CornersProblem(search.SearchProblem):
             #   hitsWall = self.walls[nextx][nexty]
 
             "*** YOUR CODE HERE ***"
+            # Check if the action provides a valid move
             x, y = state[0]
             dx, dy = Actions.directionToVector(action)
             nextx, nexty = int(x + dx), int(y + dy)
             hitsWall = self.walls[nextx][nexty]
             if not hitsWall:
                 nextLoc = (nextx, nexty)
+                # Check if the move brings Pacman to a corner. If it does, then
+                # update state[1]
                 if nextLoc in self.corners:
-                    new_found_corners = deepcopy(state[1])
                     index = self.corners.index(nextLoc)
-                    lst = list(new_found_corners)
+                    lst = list(state[1])
                     lst[index] = True
                     new_found_corners = tuple(lst)
                     nextState = (nextLoc, new_found_corners)
                 else:
-                    new_found_corners = deepcopy(state[1])
-                    nextState = (nextLoc, new_found_corners)
+                    nextState = (nextLoc, deepcopy(state[1]))
                 cost = 1
                 successors.append( ( nextState, action, cost) )
 
@@ -380,10 +395,15 @@ class CornersProblem(search.SearchProblem):
 
 ################################################################################
 # NEED TO IMPROVE THIS HEURISTIC SO THAT THE NODES EXPANDED ARE:
-# AT MOST 1200 NODES   -> (3/3)  YAY I GOT 666 NODES FOR MEDIUM_CORNERS
+# AT MOST 1200 NODES   -> (3/3)
 # AT MOST 1600 NODES   -> (2/3)
 # AT MOST 2000 NODES   -> (1/3)
 # MORE THAN 2000 NODES -> (0/3)
+################################################################################
+# This heuristic works by first creating a list of the corners not yet visited
+# by Pacman. Then, using the Manhattan distance, it finds the closest unvisited
+# corner and adds that distance to the heuristic cost. Then it updates position
+# to that corner and repeats the process until there are no unvisited corners
 ################################################################################
 def cornersHeuristic(state, problem):
     """
@@ -420,6 +440,8 @@ def cornersHeuristic(state, problem):
         undiscovered.pop(min_index)
     return cost
 
+# Helper function for finding the (x,y)-tuple in lst that is closest to location
+# Uses Manhattan distance instead of Euclidean distance b/c we're on a grid
 def find_closest(location, lst):
     min_dist = util.manhattanDistance(location, lst[0])
     min_index = 0
