@@ -1,3 +1,9 @@
+"""
+Modified by Christopher Moroz
+CMPS 3140-01
+Reinforcement Learning - Q4
+"""
+
 # qlearningAgents.py
 # ------------------
 # Licensing Information:  You are free to use or extend these projects for
@@ -43,6 +49,9 @@ class QLearningAgent(ReinforcementAgent):
         ReinforcementAgent.__init__(self, **args)
 
         "*** YOUR CODE HERE ***"
+        # Initialize the Q dict, which will have:
+        # key -> (state, action)
+        # value -> Q(state, action)
         self.Q = {}
 
     def getQValue(self, state, action):
@@ -52,6 +61,8 @@ class QLearningAgent(ReinforcementAgent):
           or the Q node value otherwise
         """
         "*** YOUR CODE HERE ***"
+        # Checks if Q(state,action) exists. If it does, return it. Otherwise
+        # initialize it to 0 and return 0.
         if not self.Q.has_key((state,action)):
             self.Q[(state,action)] = 0.0
         return self.Q[(state,action)]
