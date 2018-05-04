@@ -111,22 +111,6 @@ def depthFirstSearch(problem):
     """
     stack = util.Stack()
     return general_search(problem,stack)
-    # discovered = {}
-    # #print "Start:", problem.getStartState()
-    # #print "Start's successors:", problem.getSuccessors(problem.getStartState())
-    # startLoc = problem.getStartState()
-    # stack.push((startLoc,None,None)) #STORE IN STACK AS (location, action, previous node)
-    # while not stack.isEmpty():
-    #     node = stack.pop()
-    #     if not discovered.has_key(node[0]):
-    #         discovered[node[0]] = True
-    #         if problem.isGoalState(node[0]):
-    #             return path(node)
-    #         for neighbor in problem.getSuccessors(node[0]):
-    #             newNode = (neighbor[0], neighbor[1], node)
-    #             if(not discovered.has_key(newNode[0])):
-    #                 stack.push(newNode)
-    # util.raiseNotDefined()
 
 # node is a 3-tuple made of (location, action, previous node)
 # the root node is (problem.getStartState(), None, None)
@@ -144,20 +128,6 @@ def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     queue = util.Queue()
     return general_search(problem,queue)
-    # discovered = {}
-    # startLoc = problem.getStartState()
-    # queue.push((startLoc,None,None)) #STORE IN QUEUE AS (location, action, previous node)
-    # while not queue.isEmpty():
-    #     node = queue.pop()
-    #     if not discovered.has_key(node[0]):
-    #         discovered[node[0]] = True
-    #         if problem.isGoalState(node[0]):
-    #             return path(node)
-    #         for neighbor in problem.getSuccessors(node[0]):
-    #             newNode = (neighbor[0], neighbor[1], node)
-    #             if(not discovered.has_key(newNode[0])):
-    #                 queue.push(newNode)
-    # util.raiseNotDefined()
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
