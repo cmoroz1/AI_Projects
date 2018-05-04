@@ -1,3 +1,9 @@
+"""
+Modified by Christopher Moroz
+CMPS 3140-01
+Tutorial - Q1
+"""
+
 # addition.py
 # -----------
 # Licensing Information:  You are free to use or extend these projects for
