@@ -1,3 +1,9 @@
+"""
+Modified by Christopher Moroz
+CMPS 3140-01
+Search in Pacman - Q1,Q2,Q3,Q4
+"""
+
 # search.py
 # ---------
 # Licensing Information:  You are free to use or extend these projects for
@@ -78,9 +84,16 @@ def index(lst,elt):
             return i
     return -1
 
+# General Search definition that works based on the dataStructure provided
+# If a stack is used, then it become depthFirstSearch
+# If a queue is used, then it becomes bredthFirstSearch
 def general_search(problem, dataStruct):
     discovered = {} # The keys are the grid locations and the values are the 3-tuples of the node itself
     startLoc = problem.getStartState()
+    ############################################################################
+    # Each "node" is a tuple that contains the state, the action taken from the previous state,
+    # and the previous "node". This is used later to reconstruct the path taken from the start
+    ############################################################################
     startNode = (startLoc,None,None) #STORE IN PRIORITY QUEUE AS (location, action, previous node)
     dataStruct.push(startNode)
     while not dataStruct.isEmpty():
@@ -112,14 +125,16 @@ def depthFirstSearch(problem):
     stack = util.Stack()
     return general_search(problem,stack)
 
-# node is a 3-tuple made of (location, action, previous node)
+# node is a 3-tuple made of (state, action, previous node)
 # the root node is (problem.getStartState(), None, None)
 def path(node):
     actions = []
     current = node
+    # Get all of the actions and place them into a list
     while current[2] != None:
         actions.append(current[1])
         current = current[2]
+    # Reverse the list since we started with the last action
     actions.reverse()
     return actions
 
@@ -129,6 +144,9 @@ def breadthFirstSearch(problem):
     queue = util.Queue()
     return general_search(problem,queue)
 
+# Could not use the general_search algorithm because I could not get the
+# priorityQueue to correctly initialize its cost function, so I just rewrote
+# the general_search but hardcoded the priorityQueue instead
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     pq = util.PriorityQueue()
@@ -160,6 +178,7 @@ def nullHeuristic(state, problem=None):
     """
     return 0
 
+# Same as unformCostSearch, but now the cost is the increased by the heuristic function
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     pq = util.PriorityQueue()
